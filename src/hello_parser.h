@@ -20,6 +20,7 @@ private:
     void parser_whitespace();
     void parser_literal(const char *literal, Type type);
     void parser_value();
+    void parser_number();
 
 
 

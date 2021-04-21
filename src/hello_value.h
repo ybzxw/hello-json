@@ -13,12 +13,18 @@ namespace hello_json{
 class Value{
 public:
     void set_type(Type type);
+    int get_type() const;
+    double get_number() const;
+    void set_number(double n);
+    void parse(const std::string &content);
 
+    
 private:
-    Type type_;                // 存储JSON类型
+    Type type_ = TYPE_NULL;                // 存储JSON类型
+    double n_;                              // 存储数字类型
 };
 
-
+;
 }
 
 #endif

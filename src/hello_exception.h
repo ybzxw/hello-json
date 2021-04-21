@@ -1,5 +1,5 @@
-#ifndef HELLO_EXCEPTION.H
-#define HELLO_EXCEPTION.H
+#ifndef HELLO_EXCEPTION_H
+#define HELLO_EXCEPTION_H
 
 #include <string>
 #include <stdexcept>
