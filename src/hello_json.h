@@ -43,8 +43,12 @@ public:
     void parser(const std::string &content, std::string &status);
     void set_boolean(bool b);
     void set_null();
+    void set_string(const std::string &s);
+    void set_number(const double n);
+
     int get_type() const;
     double get_number() const;
+
 private:
     std::shared_ptr<hello_json::Value> v;
 };

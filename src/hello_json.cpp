@@ -48,3 +48,13 @@ double Hellojson::get_number() const
 {
     return v->get_number();
 }
+
+void Hellojson::set_string(const std::string &s)
+{
+    return v->set_string(s);
+}
+
+void Hellojson::set_number(const double n)
+{
+    v->set_number(n);
+}

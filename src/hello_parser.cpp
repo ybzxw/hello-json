@@ -76,7 +76,7 @@ void Parser::parser_literal(const char *literal, Type type)
  */
 void Parser::parser_number()
 {
-    // 解析数字是否正确
+    // 判断数字是否正确
     const char *p = cur_;
     if(*p == '-')
         ++p;

@@ -486,13 +486,13 @@ static void test_parse() {
 // 	EXPECT_EQ_BASE(json::False, v.get_type());
 // }
 
-// static void test_access_number()
-// {
-//     syo::Json v;
-// 	v.set_string("a");
-// 	v.set_number(1234.5);
-// 	EXPECT_EQ_BASE(1234.5, v.get_number());
-// }
+static void test_access_number()
+{
+    Hellojson v;
+	v.set_string("a");
+	v.set_number(1234.5);
+	EXPECT_EQ_BASE(1234.5, v.get_number());
+}
 
 // static void test_access_string()
 // {
@@ -614,12 +614,12 @@ static void test_parse() {
 
 // }
 
-// static void test_access()
-// 	// test_access_number();
+static void test_access(){
+	test_access_number();
 // 	// test_access_string();
 // 	// test_access_array();
 // 	// test_access_object();
-// }
+}
 
 int main() {
 	test_parse();
@@ -628,7 +628,7 @@ int main() {
 	// test_copy();
 	// test_move();
 	// test_swap();
-	// test_access();
+	test_access();
 	printf("%d/%d (%3.2f%%) passed\n", test_pass, test_count, test_pass * 100.0 / test_count);
 	return main_ret;
 }
