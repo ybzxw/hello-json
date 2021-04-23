@@ -32,7 +32,7 @@ void Value::free()
     switch (type_)
     {
         case TYPE_STRING: 
-            s_.~string();            // 必须手工调用析构函数，不然泄露
+            s_.~string();             // 必须手工调用析构函数，不然泄露
             break;      
     }
     type_ = TYPE_NULL;
@@ -79,6 +79,12 @@ void Value::set_string(const std::string &s)
         // 唯一一种必须手工调用析构函数的情况
         new(&s_) std::string(s);
     }
+}
+
+std::string Value::get_string() const
+{
+    assert(type_ == TYPE_STRING);
+    return s_;
 }
 
 }

@@ -48,6 +48,8 @@ public:
 
     int get_type() const;
     double get_number() const;
+    std::string get_string() const;
+
 
 private:
     std::shared_ptr<hello_json::Value> v;

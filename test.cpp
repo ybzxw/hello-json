@@ -69,33 +69,33 @@ static void test_parse_number()
 	TEST_NUMBER(0.0, "1e-10000"); /* must underflow */
 }
 
-// #define TEST_STRING(expect, content)\
-// 	do {\
-//         syo::Json v;\
-// 		v.parse(content, status);\
-// 		EXPECT_EQ_BASE("parse ok", status);\
-// 		EXPECT_EQ_BASE(json::String, v.get_type());\
-// 		EXPECT_EQ_BASE(0, memcmp(expect, v.get_string().c_str(), v.get_string().size()));\
-// 	} while(0)
+#define TEST_STRING(expect, content)\
+	do {\
+        Hellojson v;\
+		v.parser(content, status);\
+		EXPECT_EQ_BASE("parse ok", status);\
+		EXPECT_EQ_BASE(TYPE_STRING, v.get_type());\
+		EXPECT_EQ_BASE(0, memcmp(expect, v.get_string().c_str(), v.get_string().size()));\
+	} while(0)
 
-// #define EXPECT_EQ_STRING(expect, actual) EXPECT_EQ_BASE(0, memcmp(expect, actual.c_str(), actual.size()));
+#define EXPECT_EQ_STRING(expect, actual) EXPECT_EQ_BASE(0, memcmp(expect, actual.c_str(), actual.size()));
 
-// static void test_parse_string()
-// {
+static void test_parse_string()
+{
 
-// 	TEST_STRING("", "\"\"");
-// 	TEST_STRING("Hello", "\"Hello\"");
+	TEST_STRING("", "\"\"");
+	TEST_STRING("Hello", "\"Hello\"");
 
-// 	TEST_STRING("Hello\nWorld", "\"Hello\\nWorld\"");
-// 	TEST_STRING("\" \\ / \b \f \n \r \t", "\"\\\" \\\\ \\/ \\b \\f \\n \\r \\t\"");
+	TEST_STRING("Hello\nWorld", "\"Hello\\nWorld\"");
+	TEST_STRING("\" \\ / \b \f \n \r \t", "\"\\\" \\\\ \\/ \\b \\f \\n \\r \\t\"");
 
-// 	TEST_STRING("Hello\0World", "\"Hello\\u0000World\"");
-// 	TEST_STRING("\x24", "\"\\u0024\"");         /* Dollar sign U+0024 */
-// 	TEST_STRING("\xC2\xA2", "\"\\u00A2\"");     /* Cents sign U+00A2 */
-// 	TEST_STRING("\xE2\x82\xAC", "\"\\u20AC\""); /* Euro sign U+20AC */
-// 	TEST_STRING("\xF0\x9D\x84\x9E", "\"\\uD834\\uDD1E\"");  /* G clef sign U+1D11E */
-// 	TEST_STRING("\xF0\x9D\x84\x9E", "\"\\ud834\\udd1e\"");  /* G clef sign U+1D11E */
-// }
+	// TEST_STRING("Hello\0World", "\"Hello\\u0000World\"");
+	// TEST_STRING("\x24", "\"\\u0024\"");         /* Dollar sign U+0024 */
+	// TEST_STRING("\xC2\xA2", "\"\\u00A2\"");     /* Cents sign U+00A2 */
+	// TEST_STRING("\xE2\x82\xAC", "\"\\u20AC\""); /* Euro sign U+20AC */
+	// TEST_STRING("\xF0\x9D\x84\x9E", "\"\\uD834\\uDD1E\"");  /* G clef sign U+1D11E */
+	// TEST_STRING("\xF0\x9D\x84\x9E", "\"\\ud834\\udd1e\"");  /* G clef sign U+1D11E */
+}
 
 // static void test_parse_array()
 // {
@@ -237,27 +237,25 @@ static void test_parse_root_not_singular()
 
 }
 
-// static void test_parse_number_too_big()
-// {
-// 	TEST_ERROR("parse number too big", "1e309");
-// 	TEST_ERROR("parse number too big", "-1e309");
-// }
+static void test_parse_number_too_big()
+{
+	TEST_ERROR("parse number too big", "1e309");
+	TEST_ERROR("parse number too big", "-1e309");
+}
 
-// static void test_parse_missing_quotation_mark()
-// {
-// 	TEST_ERROR("parse miss quotation mark", "\"");
-// 	TEST_ERROR("parse miss quotation mark", "\"abc");
-// }
+static void test_parse_missing_quotation_mark()
+{
+	TEST_ERROR("parse miss quotation mark", "\"");
+	TEST_ERROR("parse miss quotation mark", "\"abc");
+}
 
-// static void test_parse_invalid_string_escape()
-// {
-// #if 1
-// 	TEST_ERROR("parse invalid string escape", "\"\\v\"");
-// 	TEST_ERROR("parse invalid string escape", "\"\\'\"");
-// 	TEST_ERROR("parse invalid string escape", "\"\\0\"");
-// 	TEST_ERROR("parse invalid string escape", "\"\\x12\"");
-// #endif
-// }
+static void test_parse_invalid_string_escape()
+{
+	TEST_ERROR("parse invalid string escape", "\"\\v\"");
+	TEST_ERROR("parse invalid string escape", "\"\\'\"");
+	TEST_ERROR("parse invalid string escape", "\"\\0\"");
+	TEST_ERROR("parse invalid string escape", "\"\\x12\"");
+}
 
 // static void test_parse_invalid_string_char()
 // {
@@ -330,14 +328,14 @@ static void test_parse_root_not_singular()
 static void test_parse() {
 	test_parse_literal();
 	test_parse_number();
-// 	test_parse_string();
+	test_parse_string();
 // 	test_parse_array();
 // 	test_parse_object();
 
 	test_parse_expect_value();
 	test_parse_invalid_value();
 	test_parse_root_not_singular();
-// 	test_parse_number_too_big();
+	test_parse_number_too_big();
 // 	test_parse_missing_quotation_mark();
 // 	test_parse_invalid_string_escape();
 // 	test_parse_invalid_string_char();
@@ -470,21 +468,21 @@ static void test_parse() {
 // 	EXPECT_EQ_BASE("Hello",  v2.get_string());
 // }
 
-// static void test_access_null()
-// {
-//     Hellojson v;
-// 	// v.set_string("a");
-// 	v.set_null();
-// 	EXPECT_EQ_BASE(TYPE_NULL, v.get_type());
-// }
+static void test_access_null()
+{
+    Hellojson v;
+	v.set_string("a");
+	v.set_null();
+	EXPECT_EQ_BASE(TYPE_NULL, v.get_type());
+}
 
-// static void test_access_boolean()
-// {
-//     syo::Json v;
-// 	v.set_string("a");
-// 	v.set_boolean(false);
-// 	EXPECT_EQ_BASE(json::False, v.get_type());
-// }
+static void test_access_boolean()
+{
+    Hellojson v;
+	v.set_string("a");
+	v.set_boolean(false);
+	EXPECT_EQ_BASE(TYPE_FALSE, v.get_type());
+}
 
 static void test_access_number()
 {
@@ -494,14 +492,14 @@ static void test_access_number()
 	EXPECT_EQ_BASE(1234.5, v.get_number());
 }
 
-// static void test_access_string()
-// {
-//     syo::Json v;
-// 	v.set_string("");
-// 	EXPECT_EQ_STRING("", v.get_string());
-// 	v.set_string("Hello");
-// 	EXPECT_EQ_STRING("Hello", v.get_string());
-// }
+static void test_access_string()
+{
+    Hellojson v;
+	v.set_string("");
+	EXPECT_EQ_STRING("", v.get_string());
+	v.set_string("Hello");
+	EXPECT_EQ_STRING("Hello", v.get_string());
+}
 
 // static void test_access_array()
 // {
@@ -615,8 +613,10 @@ static void test_access_number()
 // }
 
 static void test_access(){
+	test_access_null();
 	test_access_number();
-// 	// test_access_string();
+	test_access_string();
+	test_access_boolean();
 // 	// test_access_array();
 // 	// test_access_object();
 }

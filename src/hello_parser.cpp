@@ -39,9 +39,10 @@ Parser::Parser(Value &val, const std::string &content)
 void Parser::parser_value()
 {
     switch (*cur_){
-        case 'n': parser_literal("null", TYPE_NULL); return;
-        case 't': parser_literal("true", TYPE_TRUE); return;
-        case 'f': parser_literal("false", TYPE_FALSE); return;
+        case 'n':  parser_literal("null", TYPE_NULL); return;
+        case 't':  parser_literal("true", TYPE_TRUE); return;
+        case 'f':  parser_literal("false", TYPE_FALSE); return;
+        case '\"': parser_string(); return;
         case '\0': throw(Exception("parse expect value"));
         default: parser_number();
     }
@@ -101,9 +102,47 @@ void Parser::parser_number()
     errno = 0;
     double ret = strtod(cur_, NULL);
     if (errno == ERANGE && (ret == HUGE_VAL) || (ret == -HUGE_VAL))
-        throw(Exception("parse invalid value"));
+        throw(Exception("parse number too big"));
     val_.set_number(ret);
     cur_ = p;
+}
+
+void Parser::parser_string()
+{
+    std::string s;
+    parser_string_raw(s);
+    val_.set_string(s);
+}
+
+void Parser::parser_string_raw(std::string & tmp)
+{
+    expect(cur_, '\"');
+    const char *p = cur_;
+    while(*p != '\"')
+    {
+        if (*p == '\0')
+            throw(Exception("parse miss quotation mark"));
+        if (*p == '\\' && ++p){
+            switch (*p++){
+                case '\"': tmp += '\"'; break;
+                case '\\': tmp += '\\'; break;
+                case '/':  tmp += '/';  break;
+                case 'b':  tmp += '\b';  break;
+                case 'f':  tmp += '\f';  break;
+                case 'n':  tmp += '\n';  break;
+                case 'r':  tmp += '\r';  break;
+                case 't':  tmp += '\t';  break;
+                default: throw (Exception("parse invalid string escape"));
+            }
+        }
+        else if ((unsigned char) *p < 0x20) {
+            throw (Exception("parse invalid string char"));
+        }
+        else{
+            tmp += *p++;
+        }
+    }
+    cur_ = ++p;
 }
 
 }

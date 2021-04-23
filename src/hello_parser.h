@@ -21,6 +21,8 @@ private:
     void parser_literal(const char *literal, Type type);
     void parser_value();
     void parser_number();
+    void parser_string();
+    void parser_string_raw(std::string & tmp);
 
 
 

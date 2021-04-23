@@ -15,6 +15,7 @@ public:
     void set_type(Type type);
     int get_type() const;
     double get_number() const;
+    std::string get_string() const;
     void set_number(const double n);
     void parse(const std::string &content);
     void set_string(const std::string &s);
