@@ -113,6 +113,48 @@ void Parser::parser_string()
     parser_string_raw(s);
     val_.set_string(s);
 }
+/**
+ * 解析四位16进制数字
+ */
+void Parser::parser_hex4(const char* &p, unsigned &u)
+{
+    u = 0;
+    for (int i = 0; i < 4; ++i){
+        char ch = *p++;
+        u <<= 4;
+        if(isdigit(ch))
+            u |= ch - '0';
+        else if(ch >= 'A' && ch <= 'F')
+            u |= ch - 'A';
+        else if(ch >= 'a' && ch <= 'f')
+            u |= ch - 'a';
+        else
+            throw(Exception("parse invalid unicode hex"));
+    }
+
+}
+
+void parser_utf8(std::string & tmp, unsigned &u)
+ {
+    if (u <= 0x7F)
+        tmp += static_cast<char> (u & 0xFF);
+    else if (u <= 0x7FF) {
+        tmp += static_cast<char> (0xC0 | ((u >> 6) & 0xFF));
+        tmp += static_cast<char> (0x80 | ( u	   & 0x3F));
+    }
+    else if (u <= 0xFFFF) {
+        tmp += static_cast<char> (0xE0 | ((u >> 12) & 0xFF));
+        tmp += static_cast<char> (0x80 | ((u >>  6) & 0x3F));
+        tmp += static_cast<char> (0x80 | ( u        & 0x3F));
+    }
+    else {
+        assert(u <= 0x10FFFF);
+        tmp += static_cast<char> (0xF0 | ((u >> 18) & 0xFF));
+        tmp += static_cast<char> (0x80 | ((u >> 12) & 0x3F));
+        tmp += static_cast<char> (0x80 | ((u >>  6) & 0x3F));
+        tmp += static_cast<char> (0x80 | ( u        & 0x3F));
+    }
+}
 
 void Parser::parser_string_raw(std::string & tmp)
 {
@@ -132,6 +174,23 @@ void Parser::parser_string_raw(std::string & tmp)
                 case 'n':  tmp += '\n';  break;
                 case 'r':  tmp += '\r';  break;
                 case 't':  tmp += '\t';  break;
+                // 解析unicode
+                case 'u' :
+                    unsigned u;
+                    parser_hex4(p, u);
+                    if (u >= 0xD800 && u <= 0xDBFF) {
+                        if (*p++ != '\\')
+                            throw(Exception("parse invalid unicode surrogate"));
+                        if (*p++ != 'u')
+                            throw(Exception("parse invalid unicode surrogate"));
+                        unsigned u2;
+                        parser_hex4(p, u2);
+                        if (u2 < 0xDC00 || u2 > 0xDFFF)
+                            throw(Exception("parse invalid unicode surrogate"));
+                        u = (((u - 0xD800) << 10) | (u2 - 0xDC00)) + 0x10000;
+                    }
+                    parser_utf8(tmp, u);
+                    break;
                 default: throw (Exception("parse invalid string escape"));
             }
         }
