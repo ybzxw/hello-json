@@ -97,43 +97,43 @@ static void test_parse_string()
 	// TEST_STRING("\xF0\x9D\x84\x9E", "\"\\ud834\\udd1e\"");  /* G clef sign U+1D11E */
 }
 
-// static void test_parse_array()
-// {
-//     syo::Json v;
+static void test_parse_array()
+{
+    Hellojson v;
 
-// 	v.parse("[ ]", status);
-// 	EXPECT_EQ_BASE("parse ok", status);
-// 	EXPECT_EQ_BASE(json::Array, v.get_type());
-// 	EXPECT_EQ_BASE(0, v.get_array_size());
+	v.parser("[ ]", status);
+	EXPECT_EQ_BASE("parse ok", status);
+	EXPECT_EQ_BASE(TYPE_ARRAY, v.get_type());
+	EXPECT_EQ_BASE(0, v.get_array_size());
 
-// 	v.parse("[ null , false , true , 123 , \"abc\" ]", status);
-// 	EXPECT_EQ_BASE("parse ok", status);
-// 	EXPECT_EQ_BASE(json::Array, v.get_type());
-// 	EXPECT_EQ_BASE(5, v.get_array_size());
-// 	EXPECT_EQ_BASE(json::Null,   v.get_array_element(0).get_type());
-// 	EXPECT_EQ_BASE(json::False,  v.get_array_element(1).get_type());
-// 	EXPECT_EQ_BASE(json::True,   v.get_array_element(2).get_type());
-// 	EXPECT_EQ_BASE(json::Number, v.get_array_element(3).get_type());
-// 	EXPECT_EQ_BASE(json::String, v.get_array_element(4).get_type());
-// 	EXPECT_EQ_BASE(123.0, v.get_array_element(3).get_number());
-// 	EXPECT_EQ_STRING("abc", v.get_array_element(4).get_string());
+	v.parser("[ null , false , true , 123 , \"abc\" ]", status);
+	EXPECT_EQ_BASE("parse ok", status);
+	EXPECT_EQ_BASE(TYPE_ARRAY, v.get_type());
+	EXPECT_EQ_BASE(5, v.get_array_size());
+	// EXPECT_EQ_BASE(json::Null,   v.get_array_element(0).get_type());
+	// EXPECT_EQ_BASE(json::False,  v.get_array_element(1).get_type());
+	// EXPECT_EQ_BASE(json::True,   v.get_array_element(2).get_type());
+	// EXPECT_EQ_BASE(json::Number, v.get_array_element(3).get_type());
+	// EXPECT_EQ_BASE(json::String, v.get_array_element(4).get_type());
+	// EXPECT_EQ_BASE(123.0, v.get_array_element(3).get_number());
+	// EXPECT_EQ_STRING("abc", v.get_array_element(4).get_string());
 	
-// 	v.parse("[ [ ] , [ 0 ] , [ 0 , 1 ] , [ 0 , 1 , 2 ] ]", status);
-// 	EXPECT_EQ_BASE("parse ok", status);
-// 	EXPECT_EQ_BASE(json::Array, v.get_type());
-// 	EXPECT_EQ_BASE(4, v.get_array_size());
-// 	for(int i = 0; i < 4; ++i) {
-//         syo::Json a = v.get_array_element(i);
-// 		EXPECT_EQ_BASE(json::Array, a.get_type());
-// 		EXPECT_EQ_BASE(i, a.get_array_size());
-// 		for(int j = 0; j < i; ++j) {
-//             syo::Json e = a.get_array_element(j);
-// 			EXPECT_EQ_BASE(json::Number, e.get_type());
-// 			EXPECT_EQ_BASE((double)j, e.get_number());
+	// v.parse("[ [ ] , [ 0 ] , [ 0 , 1 ] , [ 0 , 1 , 2 ] ]", status);
+	// EXPECT_EQ_BASE("parse ok", status);
+	// EXPECT_EQ_BASE(json::Array, v.get_type());
+	// EXPECT_EQ_BASE(4, v.get_array_size());
+	// for(int i = 0; i < 4; ++i) {
+    //     syo::Json a = v.get_array_element(i);
+	// 	EXPECT_EQ_BASE(json::Array, a.get_type());
+	// 	EXPECT_EQ_BASE(i, a.get_array_size());
+	// 	for(int j = 0; j < i; ++j) {
+    //         syo::Json e = a.get_array_element(j);
+	// 		EXPECT_EQ_BASE(json::Number, e.get_type());
+	// 		EXPECT_EQ_BASE((double)j, e.get_number());
 		
-// 		}
-// 	}
-// }
+	// 	}
+	// }
+}
 
 // static void test_parse_object()
 // {
@@ -257,47 +257,47 @@ static void test_parse_invalid_string_escape()
 	TEST_ERROR("parse invalid string escape", "\"\\x12\"");
 }
 
-// static void test_parse_invalid_string_char()
-// {
+static void test_parse_invalid_string_char()
+{
 // #if 1
-// 	TEST_ERROR("parse invalid string char", "\"\x01\"");
-// 	TEST_ERROR("parse invalid string char", "\"\x1F\"");
+	TEST_ERROR("parse invalid string char", "\"\x01\"");
+	TEST_ERROR("parse invalid string char", "\"\x1F\"");
 // #endif
-// }
+}
 
-// static void test_parse_invalid_unicode_hex()
-// {
-// 	TEST_ERROR("parse invalid unicode hex", "\"\\u\"");
-// 	TEST_ERROR("parse invalid unicode hex", "\"\\u0\"");
-// 	TEST_ERROR("parse invalid unicode hex", "\"\\u01\"");
-// 	TEST_ERROR("parse invalid unicode hex", "\"\\u012\"");
-// 	TEST_ERROR("parse invalid unicode hex", "\"\\u/000\"");
-// 	TEST_ERROR("parse invalid unicode hex", "\"\\uG000\"");
-// 	TEST_ERROR("parse invalid unicode hex", "\"\\u0/00\"");
-// 	TEST_ERROR("parse invalid unicode hex", "\"\\u0G00\"");
-// 	TEST_ERROR("parse invalid unicode hex", "\"\\u0/00\"");
-// 	TEST_ERROR("parse invalid unicode hex", "\"\\u00G0\"");
-// 	TEST_ERROR("parse invalid unicode hex", "\"\\u000/\"");
-// 	TEST_ERROR("parse invalid unicode hex", "\"\\u000G\"");
-// 	TEST_ERROR("parse invalid unicode hex", "\"\\u 123\"");
-// }
+static void test_parse_invalid_unicode_hex()
+{
+	TEST_ERROR("parse invalid unicode hex", "\"\\u\"");
+	TEST_ERROR("parse invalid unicode hex", "\"\\u0\"");
+	TEST_ERROR("parse invalid unicode hex", "\"\\u01\"");
+	TEST_ERROR("parse invalid unicode hex", "\"\\u012\"");
+	TEST_ERROR("parse invalid unicode hex", "\"\\u/000\"");
+	TEST_ERROR("parse invalid unicode hex", "\"\\uG000\"");
+	TEST_ERROR("parse invalid unicode hex", "\"\\u0/00\"");
+	TEST_ERROR("parse invalid unicode hex", "\"\\u0G00\"");
+	TEST_ERROR("parse invalid unicode hex", "\"\\u0/00\"");
+	TEST_ERROR("parse invalid unicode hex", "\"\\u00G0\"");
+	TEST_ERROR("parse invalid unicode hex", "\"\\u000/\"");
+	TEST_ERROR("parse invalid unicode hex", "\"\\u000G\"");
+	TEST_ERROR("parse invalid unicode hex", "\"\\u 123\"");
+}
 
-// static void test_parse_invalid_unicode_surrogate() {
-// 	TEST_ERROR("parse invalid unicode surrogate", "\"\\uD800\"");
-// 	TEST_ERROR("parse invalid unicode surrogate", "\"\\uDBFF\"");
-// 	TEST_ERROR("parse invalid unicode surrogate", "\"\\uD800\\\\\"");
-// 	TEST_ERROR("parse invalid unicode surrogate", "\"\\uD800\\uDBFF\"");
-// 	TEST_ERROR("parse invalid unicode surrogate", "\"\\uD800\\uE000\"");
-// }
+static void test_parse_invalid_unicode_surrogate() {
+	TEST_ERROR("parse invalid unicode surrogate", "\"\\uD800\"");
+	TEST_ERROR("parse invalid unicode surrogate", "\"\\uDBFF\"");
+	TEST_ERROR("parse invalid unicode surrogate", "\"\\uD800\\\\\"");
+	TEST_ERROR("parse invalid unicode surrogate", "\"\\uD800\\uDBFF\"");
+	TEST_ERROR("parse invalid unicode surrogate", "\"\\uD800\\uE000\"");
+}
 
-// static void test_parse_miss_comma_or_square_bracket() {
+static void test_parse_miss_comma_or_square_bracket() {
 // #if 1
-// 	TEST_ERROR("parse miss comma or square bracket", "[1");
-// 	TEST_ERROR("parse miss comma or square bracket", "[1}");
-// 	TEST_ERROR("parse miss comma or square bracket", "[1 2");
-// 	TEST_ERROR("parse miss comma or square bracket", "[[]");
+	TEST_ERROR("parse miss comma or square bracket", "[1");
+	TEST_ERROR("parse miss comma or square bracket", "[1}");
+	TEST_ERROR("parse miss comma or square bracket", "[1 2");
+	TEST_ERROR("parse miss comma or square bracket", "[[]");
 // #endif
-// }
+}
 
 // static void test_parse_miss_key()
 // {
@@ -329,19 +329,19 @@ static void test_parse() {
 	test_parse_literal();
 	test_parse_number();
 	test_parse_string();
-// 	test_parse_array();
-// 	test_parse_object();
+	test_parse_array();
+	// test_parse_object();
 
 	test_parse_expect_value();
 	test_parse_invalid_value();
 	test_parse_root_not_singular();
 	test_parse_number_too_big();
-// 	test_parse_missing_quotation_mark();
-// 	test_parse_invalid_string_escape();
-// 	test_parse_invalid_string_char();
-// 	test_parse_invalid_unicode_hex();
-// 	test_parse_invalid_unicode_surrogate();
-// 	test_parse_miss_comma_or_square_bracket();
+	test_parse_missing_quotation_mark();
+	test_parse_invalid_string_escape();
+	test_parse_invalid_string_char();
+	test_parse_invalid_unicode_hex();
+	test_parse_invalid_unicode_surrogate();
+	// test_parse_miss_comma_or_square_bracket();
 // 	test_parse_miss_key();
 // 	test_parse_miss_colon;
 // 	test_parse_miss_comma_or_curly_bracket();
@@ -501,22 +501,22 @@ static void test_access_string()
 	EXPECT_EQ_STRING("Hello", v.get_string());
 }
 
-// static void test_access_array()
-// {
-//     syo::Json a, e;
+static void test_access_array()
+{
+    Hellojson a, e;
 	
-// 	for (size_t j = 0; j < 5; j += 5) {
-// 		a.set_array();
-// 		EXPECT_EQ_BASE(0, a.get_array_size());
-// 		for (int i = 0; i < 10; ++i){
-// 			e.set_number(i);
-// 			a.pushback_array_element(e);
-// 		}
+	for (size_t j = 0; j < 5; j += 5) {
+		a.set_array();
+		EXPECT_EQ_BASE(0, a.get_array_size());
+		// for (int i = 0; i < 10; ++i){
+		// 	e.set_number(i);
+		// 	a.pushback_array_element(e);
+		// }
 
-// 		EXPECT_EQ_BASE(10, a.get_array_size());
-// 		for (int i = 0; i < 10; ++i)
-// 			EXPECT_EQ_BASE(static_cast<double>(i), a.get_array_element(i).get_number());
-// 	}
+		// EXPECT_EQ_BASE(10, a.get_array_size());
+		// for (int i = 0; i < 10; ++i)
+		// 	EXPECT_EQ_BASE(static_cast<double>(i), a.get_array_element(i).get_number());
+	}
 
 // 	a.popback_array_element();
 // 	EXPECT_EQ_BASE(9, a.get_array_size());
@@ -553,7 +553,7 @@ static void test_access_string()
 
 // 	a.clear_array();
 // 	EXPECT_EQ_BASE(0, a.get_array_size());
-// }
+}
 
 // static void test_access_object()
 // {
@@ -617,7 +617,7 @@ static void test_access(){
 	test_access_number();
 	test_access_string();
 	test_access_boolean();
-// 	// test_access_array();
+	test_access_array();
 // 	// test_access_object();
 }
 

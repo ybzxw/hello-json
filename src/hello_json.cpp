@@ -63,3 +63,17 @@ std::string Hellojson::get_string() const
 {
     return v->get_string();
 }
+
+std::vector<hello_json::Value>::size_type Hellojson::get_array_size() const
+{
+    return v->get_array_size();
+}
+const hello_json::Value& Hellojson::get_array_element(std::vector<hello_json::Value>::size_type index)
+{
+    return v->get_array_element(index);
+}
+
+void Hellojson::set_array()
+{
+    v-> set_array(std::vector<hello_json::Value>{});
+}

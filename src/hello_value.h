@@ -1,7 +1,7 @@
 #ifndef HELLO_VALUE_H
 #define HELLO_VALUE_H
 
-#include"hello_json.h"
+#include "hello_json.h"
 
 namespace hello_json{
 
@@ -20,8 +20,12 @@ public:
     void parse(const std::string &content);
     void set_string(const std::string &s);
 
-
+    std::vector<Value>::size_type get_array_size() const;
+    const Value& get_array_element(std::vector<Value>::size_type index);
+    void set_array(const std::vector<Value> &arr);
     Value() { n_ = 0; }
+    Value(const Value &rhs) { init(rhs); }
+    Value& operator=(const Value &rhs);
     ~Value(); 
 
 private:
@@ -30,11 +34,15 @@ private:
     Type type_ = TYPE_NULL;                // 存储JSON类型
     union{
         double n_;                              // 存储数字类型
-        std::string s_;                       // 存储字符串类型
+        std::string s_;                         // 存储字符串类型
+        std::vector<Value> arr_;                // 存储数组类型
     };
+    friend bool operator==(const Value &lhs, const Value &rhs);
 };
 
-;
+bool operator==(const Value &lhs, const Value &rhs);
+bool operator!=(const Value &lhs, const Value &rhs);
+
 }
 
 #endif

@@ -20,11 +20,20 @@ void Value::init(const Value &rhs)
             n_ = rhs.n_;
             break;
         case TYPE_STRING:
-            new (&s_) std::string(s_);
+            new (&s_) std::string(rhs.s_);
             break;
+        case TYPE_ARRAY:
+            new (&arr_) std::vector<Value>(rhs.arr_);
     }
 }
 
+Value& Value::operator=(const Value &rhs)
+{
+    free();
+    init(rhs);
+}
+
+    
 void Value::free()
 {
     using namespace std;
@@ -33,7 +42,10 @@ void Value::free()
     {
         case TYPE_STRING: 
             s_.~string();             // 必须手工调用析构函数，不然泄露
-            break;      
+            break;
+        case TYPE_ARRAY:
+            arr_.~vector<Value>();
+            break;
     }
     type_ = TYPE_NULL;
 }
@@ -86,5 +98,56 @@ std::string Value::get_string() const
     assert(type_ == TYPE_STRING);
     return s_;
 }
+
+std::vector<Value>::size_type Value::get_array_size() const
+{
+    assert(type_ == TYPE_ARRAY);
+    return arr_.size();
+}
+
+const Value& Value::get_array_element(std::vector<Value>::size_type index)
+{
+    assert(type_ == TYPE_ARRAY);
+    return arr_[index];
+}
+
+void Value::set_array(const std::vector<Value> &arr)
+{
+    if(type_ == TYPE_ARRAY){
+        arr_ = arr;
+    }
+    else{
+        free();
+        type_ = TYPE_ARRAY;
+        // Value
+        new(&arr_) std::vector<Value>(arr); 
+    }
+}
+
+
+bool operator==(const Value &lhs, const Value &rhs)
+{
+    if (lhs.type_ != rhs.type_)
+        return false;
+    switch (lhs.type_) {
+        case TYPE_STRING: return lhs.s_ == rhs.s_;
+        case TYPE_NUMBER: return lhs.n_ == rhs.n_;
+        case TYPE_ARRAY:  return lhs.arr_ == rhs.arr_;
+        // case json::Object:
+        //     if (lhs.get_object_size() != rhs.get_object_size())
+        //         return false;
+        //     for (size_t i = 0; i < lhs.get_object_size(); ++i) {
+        //         auto index = rhs.find_object_index(lhs.get_object_key(i));
+        //         if(index < 0 || lhs.get_object_value(i) != rhs.get_object_value(index)) return false;
+        //     }
+        //     return true;
+    }
+    return true;
+}
+bool operator!=(const Value &lhs, const Value &rhs)
+{
+    return !(lhs == rhs);
+}
+
 
 }

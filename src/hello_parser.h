@@ -24,8 +24,8 @@ private:
     void parser_string();
     void parser_string_raw(std::string & tmp);
     void parser_hex4(const char* &p, unsigned &u);          // 解析4位16进制数字
-    void parser_utf8(std::string & tmp, unsigned &u);        // 生成utf-8 
-
+    void parser_utf8(std::string & tmp, unsigned &u);       // 生成utf-8 
+    void parser_array();                                    // 解析数组
 
     Value &val_;                 //存放解析类型
     const char *cur_;            //存放待解析的json

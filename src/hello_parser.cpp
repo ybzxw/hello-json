@@ -5,7 +5,7 @@
 #include "hello_parser.h"
 #include "hello_value.h"
 #include "hello_exception.h"
-
+#include <iostream>
 
 
 namespace hello_json{
@@ -43,8 +43,9 @@ void Parser::parser_value()
         case 't':  parser_literal("true", TYPE_TRUE); return;
         case 'f':  parser_literal("false", TYPE_FALSE); return;
         case '\"': parser_string(); return;
+        case '[':  parser_array(); return;
         case '\0': throw(Exception("parse expect value"));
-        default: parser_number();
+        default: parser_number(); return;
     }
 }
 
@@ -125,17 +126,17 @@ void Parser::parser_hex4(const char* &p, unsigned &u)
         if(isdigit(ch))
             u |= ch - '0';
         else if(ch >= 'A' && ch <= 'F')
-            u |= ch - 'A';
+            u |= ch - ('A' - 10);
         else if(ch >= 'a' && ch <= 'f')
-            u |= ch - 'a';
+            u |= ch - ('a' - 10);
         else
             throw(Exception("parse invalid unicode hex"));
     }
 
 }
 
-void parser_utf8(std::string & tmp, unsigned &u)
- {
+void Parser::parser_utf8(std::string & tmp, unsigned &u)
+{
     if (u <= 0x7F)
         tmp += static_cast<char> (u & 0xFF);
     else if (u <= 0x7FF) {
@@ -202,6 +203,46 @@ void Parser::parser_string_raw(std::string & tmp)
         }
     }
     cur_ = ++p;
+}
+
+/**
+ *  解析数组
+ */
+void Parser::parser_array()
+{
+    expect(cur_, '[');
+    parser_whitespace();
+    std::vector<Value> tmp;
+    if(*cur_ == ']'){
+        ++cur_;
+        // free两次会报错？为啥？
+        // val_.set_type(TYPE_ARRAY);
+        val_.set_array(tmp);
+        return;
+    }
+    for(;;){
+        try{
+            parser_value();
+        } catch (Exception){
+            val_.set_type(TYPE_NULL);
+            throw;
+        }
+        tmp.push_back(val_);
+        parser_whitespace();
+        if(*cur_ == ','){
+            ++cur_;
+            parser_whitespace();
+        }
+        else if(*cur_ == ']'){
+            ++cur_;
+            val_.set_array(tmp);
+            return;
+        }
+        else{
+            val_.set_type(TYPE_NULL);
+            throw(Exception("parse miss comma or square bracket"));
+        }
+    }
 }
 
 }
