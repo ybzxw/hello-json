@@ -32,6 +32,8 @@ enum Type {
 //     PARSER_ROOT_NOT_SINGULAR
 // };
 class Value;
+using object = std::vector<std::pair<std::string, Value>>;   // object类型
+using object_size = std::vector<std::pair<std::string, Value>>::size_type;  // object 大小
 
 }
 
@@ -46,6 +48,7 @@ public:
     void set_null();
     void set_string(const std::string &s);
     void set_number(const double n);
+    void set_object();
 
     int get_type() const;
     double get_number() const;
@@ -54,6 +57,13 @@ public:
     std::vector<hello_json::Value>::size_type get_array_size() const;
     const hello_json::Value& get_array_element(std::vector<hello_json::Value>::size_type index);
     void set_array();
+
+    hello_json::object_size get_object_size() const;
+    hello_json::object_size get_object_key_length(hello_json::object_size index) const;
+    const std::string& get_object_key(hello_json::object_size index) const;
+    const hello_json::Value& get_object_value(hello_json::object_size index) const;
+
+
 private:
     std::shared_ptr<hello_json::Value> v;
 };

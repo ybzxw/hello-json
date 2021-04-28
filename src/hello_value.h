@@ -23,6 +23,14 @@ public:
     std::vector<Value>::size_type get_array_size() const;
     const Value& get_array_element(std::vector<Value>::size_type index);
     void set_array(const std::vector<Value> &arr);
+    
+    object_size get_object_size() const;
+    object_size get_object_key_length(object_size index) const;
+    const std::string& get_object_key(object_size index) const;
+    const Value& get_object_value(object_size index) const;
+    void set_object(const object &obj);
+
+    
     Value() { n_ = 0; }
     Value(const Value &rhs) { init(rhs); }
     Value& operator=(const Value &rhs);
@@ -36,6 +44,7 @@ private:
         double n_;                              // 存储数字类型
         std::string s_;                         // 存储字符串类型
         std::vector<Value> arr_;                // 存储数组类型
+        object obj_;             // 存储对象类型
     };
     friend bool operator==(const Value &lhs, const Value &rhs);
 };

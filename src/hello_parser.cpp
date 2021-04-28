@@ -44,6 +44,7 @@ void Parser::parser_value()
         case 'f':  parser_literal("false", TYPE_FALSE); return;
         case '\"': parser_string(); return;
         case '[':  parser_array(); return;
+        case '{':  parser_object(); return;
         case '\0': throw(Exception("parse expect value"));
         default: parser_number(); return;
     }
@@ -223,7 +224,7 @@ void Parser::parser_array()
     for(;;){
         try{
             parser_value();
-        } catch (Exception){
+        } catch (Exception ){
             val_.set_type(TYPE_NULL);
             throw;
         }
@@ -244,5 +245,55 @@ void Parser::parser_array()
         }
     }
 }
+
+void Parser::parser_object()
+{
+    expect(cur_, '{');
+    parser_whitespace();
+    object tmp;
+    if(*cur_ == '}'){
+        ++cur_;
+        val_.set_object(tmp);
+        return;
+    }
+    std::string key;
+    for(;;){
+        // 解析key
+        if (*cur_ != '\"') throw(Exception("parse miss key"));
+        try{
+            parser_string_raw(key);
+        } catch (Exception){
+            throw(Exception("parse miss key"));
+        }
+        parser_whitespace();
+        if(*cur_++ != ':') throw(Exception("parse miss colon"));
+        // 解析value
+        parser_whitespace();
+        try{
+            parser_value();
+        } catch (Exception){
+            val_.set_type(TYPE_NULL);
+            throw;
+        }
+        tmp.push_back(make_pair(key, val_));
+        val_.set_type(TYPE_NULL);
+        key.clear();
+        parser_whitespace();
+        if (*cur_ == ','){
+            ++cur_;
+            parser_whitespace();
+        }
+        else if(*cur_ == '}'){
+            ++cur_;
+            val_.set_object(tmp);
+        }
+        else{
+            val_.set_type(TYPE_NULL);
+            throw(Exception("parse miss comma or curly bracket"));
+        }
+    }
+}
+
+
 
 }

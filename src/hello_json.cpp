@@ -75,5 +75,27 @@ const hello_json::Value& Hellojson::get_array_element(std::vector<hello_json::Va
 
 void Hellojson::set_array()
 {
-    v-> set_array(std::vector<hello_json::Value>{});
+    v->set_array(std::vector<hello_json::Value>{});
+}
+
+void Hellojson::set_object()
+{
+    v->set_object(hello_json::object{});
+}
+
+hello_json::object_size Hellojson::get_object_size() const
+{
+    return v->get_object_size();
+}
+hello_json::object_size Hellojson::get_object_key_length(hello_json::object_size index) const
+{
+    return v->get_object_key_length(index);
+}
+const std::string& Hellojson::get_object_key(hello_json::object_size index) const
+{
+    return v->get_object_key(index);
+}
+const hello_json::Value& Hellojson::get_object_value(hello_json::object_size index) const
+{
+    return v->get_object_value(index);
 }

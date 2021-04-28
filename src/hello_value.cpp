@@ -124,6 +124,41 @@ void Value::set_array(const std::vector<Value> &arr)
     }
 }
 
+object_size Value::get_object_size() const
+{
+    assert(type_ == TYPE_OBJECT);
+    return obj_.size();
+}
+
+object_size Value::get_object_key_length(object_size index) const
+{
+    assert(type_ == TYPE_OBJECT);
+    return obj_[index].first.size();
+}
+
+const std::string& Value::get_object_key(object_size index) const
+{
+    assert(type_ == TYPE_OBJECT);
+    return obj_[index].first;
+}
+
+const Value& Value::get_object_value(object_size index) const
+{
+    assert(type_ == TYPE_OBJECT);
+    return obj_[index].second;
+}
+
+void Value::set_object(const object &obj)
+{
+    if(type_ == TYPE_OBJECT){
+        obj_= obj;
+    }
+    else{
+        free();
+        type_ = TYPE_OBJECT;
+        new(&obj_) object(obj);
+    }
+}
 
 bool operator==(const Value &lhs, const Value &rhs)
 {
@@ -133,10 +168,10 @@ bool operator==(const Value &lhs, const Value &rhs)
         case TYPE_STRING: return lhs.s_ == rhs.s_;
         case TYPE_NUMBER: return lhs.n_ == rhs.n_;
         case TYPE_ARRAY:  return lhs.arr_ == rhs.arr_;
-        // case json::Object:
+        // case TYPE_OBJECT:
         //     if (lhs.get_object_size() != rhs.get_object_size())
         //         return false;
-        //     for (size_t i = 0; i < lhs.get_object_size(); ++i) {
+        //     for (object_size i = 0; i < lhs.get_object_size(); ++i) {
         //         auto index = rhs.find_object_index(lhs.get_object_key(i));
         //         if(index < 0 || lhs.get_object_value(i) != rhs.get_object_value(index)) return false;
         //     }
